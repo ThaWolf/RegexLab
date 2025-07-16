@@ -15,6 +15,9 @@ export default function Navbar() {
         <Link href="/train" className="underline">
           Entrenar
         </Link>
+        <Link href="/docs" className="underline">
+          Docs
+        </Link>
         {session ? (
           <div className="flex items-center gap-2">
             {session.user?.image && (
