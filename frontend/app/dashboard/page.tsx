@@ -16,11 +16,37 @@ export default async function DashboardPage() {
     health = 'Error'
   }
 
+  let stats: {
+    totalCompleted: number
+    successRate: number
+    correctByLevel: Record<string, number>
+  } | null = null
+  try {
+    const res = await fetch(`${apiBase}/users/${session.user?.id}/stats`)
+    stats = await res.json()
+  } catch (e) {
+    stats = null
+  }
+
   return (
     <main className="p-4">
       <h1 className="text-2xl font-bold">Dashboard</h1>
       <p className="mt-2">Bienvenido, {session.user?.name}</p>
       <p className="mt-2">Estado del backend: {health}</p>
+      {stats && (
+        <div className="mt-4 space-y-1">
+          <p>Ejercicios completados: {stats.totalCompleted}</p>
+          <p>Tasa de aciertos: {(stats.successRate * 100).toFixed(0)}%</p>
+          <p className="font-semibold">Aciertos por nivel:</p>
+          <ul className="list-disc list-inside">
+            {Object.entries(stats.correctByLevel).map(([lvl, count]) => (
+              <li key={lvl}>
+                {lvl}: {count}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </main>
   )
 }
