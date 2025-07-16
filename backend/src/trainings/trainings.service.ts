@@ -3,16 +3,19 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { TrainingExercise } from './training-exercise.entity'
 import { TrainingLevel } from './training-level.enum'
+import { TrainingResult } from './training-result.entity'
 
 @Injectable()
 export class TrainingsService {
   constructor(
     @InjectRepository(TrainingExercise)
-    private readonly repo: Repository<TrainingExercise>,
+    private readonly exerciseRepo: Repository<TrainingExercise>,
+    @InjectRepository(TrainingResult)
+    private readonly resultRepo: Repository<TrainingResult>,
   ) {}
 
   async randomByLevel(level: TrainingLevel): Promise<TrainingExercise | null> {
-    return this.repo
+    return this.exerciseRepo
       .createQueryBuilder('exercise')
       .where('exercise.level = :level', { level })
       .orderBy('RANDOM()')
@@ -20,11 +23,19 @@ export class TrainingsService {
   }
 
   async validateRegex(
+    userId: number,
     exerciseId: number,
     regex: string,
   ): Promise<boolean> {
-    const exercise = await this.repo.findOneBy({ id: exerciseId })
+    const exercise = await this.exerciseRepo.findOneBy({ id: exerciseId })
     if (!exercise) return false
-    return regex === exercise.expectedRegex
+    const isCorrect = regex === exercise.expectedRegex
+    await this.resultRepo.save({
+      userId,
+      exerciseId,
+      userRegex: regex,
+      isCorrect,
+    })
+    return isCorrect
   }
 }

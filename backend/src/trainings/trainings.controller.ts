@@ -13,10 +13,11 @@ export class TrainingsController {
 
   @Post('validate')
   async validate(
+    @Body('userId') userId: number,
     @Body('id') id: number,
     @Body('regex') regex: string,
   ) {
-    const valid = await this.service.validateRegex(id, regex)
+    const valid = await this.service.validateRegex(userId, id, regex)
     return { valid }
   }
 }
