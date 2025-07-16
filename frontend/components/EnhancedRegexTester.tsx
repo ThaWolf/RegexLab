@@ -40,7 +40,7 @@ export default function EnhancedRegexTester() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const apiBase = process.env.NEXT_PUBLIC_API_URL || '/api'
+  const apiBase = process.env.NEXT_PUBLIC_API_URL || 'https://passionate-courage-production.up.railway.app/api'
 
   useEffect(() => {
     fetchCommonPatterns()
