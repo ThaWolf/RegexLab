@@ -30,8 +30,31 @@ jobs:
       - name: Run tests
         run: npm run test
       
+      - name: Build frontend
+        run: npm --prefix frontend run build
+        env:
+          NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
+          NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
+          NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+      
       - name: Install Playwright Browsers
         run: npx playwright install
+      
+      - name: Start frontend server
+        run: npm --prefix frontend run start &
+        env:
+          NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
+          NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
+          NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+      
+      - name: Wait for frontend server
+        run: |
+          sleep 10
+          curl -f http://localhost:3000 || exit 1
       
       - name: Run E2E tests
         run: npm run test:e2e
