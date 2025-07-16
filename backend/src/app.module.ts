@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 import { AppController } from './app.controller'
 import { TrainingsModule } from './trainings/trainings.module'
 import { UsersModule } from './users/users.module'
+import { RegexModule } from './regex/regex.module'
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { UsersModule } from './users/users.module'
     }),
     TrainingsModule,
     UsersModule,
+    RegexModule,
   ],
   controllers: [AppController],
 })

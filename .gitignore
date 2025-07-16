@@ -1,9 +1,73 @@
-node_modules
-.DS_Store
-.next
+# Dependencies
+node_modules/
+*/node_modules/
+
+# Environment files
 .env
-backend/dist
-frontend/package-lock.json
-backend/coverage
-frontend/coverage
 .env.local
+.env.development
+.env.production
+.env.test
+*.env
+
+# Build outputs
+.next/
+backend/dist/
+frontend/.next/
+dist/
+build/
+
+# Coverage reports
+coverage/
+*/coverage/
+*.lcov
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+
+# Railway and Vercel
+.railway/
+.vercel/
+
+# Package lock files (keep root, ignore subdirectories)
+frontend/package-lock.json
+backend/package-lock.json
+
+# Database
+*.sqlite
+*.db
+
+# SSL certificates
+*.pem
+*.key
+*.crt
