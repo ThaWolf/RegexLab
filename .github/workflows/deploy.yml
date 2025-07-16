@@ -50,7 +50,7 @@ jobs:
           
           # Wait for server to be ready
           echo "Waiting for frontend server to start..."
-          for i in {1..30}; do
+          for i in {1..60}; do
             if curl -f http://localhost:3000 > /dev/null 2>&1; then
               echo "Frontend server is ready!"
               break
@@ -59,11 +59,18 @@ jobs:
             sleep 2
           done
           
+          # Verify server is actually running
+          if ! curl -f http://localhost:3000 > /dev/null 2>&1; then
+            echo "❌ Frontend server failed to start"
+            exit 1
+          fi
+          
           # Run E2E tests
           npm run test:e2e
           
           # Clean up
           kill $SERVER_PID || true
+          wait $SERVER_PID 2>/dev/null || true
         env:
           NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
           NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}

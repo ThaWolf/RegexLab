@@ -8,6 +8,7 @@ node_modules/
 .env.development
 .env.production
 .env.test
+.env.*
 *.env
 
 # Build outputs
@@ -54,6 +55,8 @@ Thumbs.db
 *.tmp
 *.temp
 .cache/
+test-results/
+playwright-report/
 
 # Railway and Vercel
 .railway/
@@ -62,6 +65,10 @@ Thumbs.db
 # Package lock files (keep root, ignore subdirectories)
 frontend/package-lock.json
 backend/package-lock.json
+
+# Generated files
+*.tsbuildinfo
+.next-env.d.ts
 
 # Database
 *.sqlite

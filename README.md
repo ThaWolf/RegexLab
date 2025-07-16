@@ -1,46 +1,114 @@
 # RegexLab
 
-Proyecto inicial para RegexLab con frontend en Next.js y backend en NestJS.
+A comprehensive regex playground application designed to help users learn, practice, and master regular expressions.
 
-## Requisitos
-- Docker y Docker Compose
+## 🚀 Quick Start
 
-## Uso
-1. Copia `.env.example` a `.env` y ajusta las variables si es necesario.
-2. Ejecuta `docker-compose up --build` para levantar los servicios.
+### Prerequisites
+- Node.js 18+ 
+- npm
+- Docker (for local PostgreSQL)
 
-## Infraestructura
-- **Frontend** preparado para desplegar en Vercel (ver `vercel.json`).
-- **Backend** puede desplegarse en Railway (agregar variables y comandos según la plataforma).
-  - Al estar en la carpeta `backend/` configurá el **Root Directory** del servicio a `backend`.
-
-## Tests
-
-Instala las dependencias de `backend` y `frontend` (por ejemplo ejecutando `npm install` en cada carpeta) y luego corre desde la raiz:
-
+### Setup
 ```bash
-npm run test
+# Clone the repository
+git clone <your-repo-url>
+cd RegexLab
+
+# Run the setup script (recommended)
+./setup.sh
+
+# Or manually install dependencies
+npm install
+cd frontend && npm install && cd ..
+cd backend && npm install && cd ..
+npx playwright install
+
+# Create environment file
+cp .env.example .env.local
+# Edit .env.local with your configuration
+
+# Validate environment
+./validate-env.sh
+
+# Start services
+docker-compose up -d  # PostgreSQL
+cd backend && npm run start:dev  # Backend
+cd frontend && npm run dev  # Frontend
 ```
 
-El comando ejecuta los tests de ambos proyectos con Jest y genera reportes de coverage en `backend/coverage` y `frontend/coverage`.
+## 🏗️ Architecture
 
-### Tests E2E
+- **Frontend**: Next.js 14, React 18, TypeScript, Tailwind CSS
+- **Backend**: NestJS, TypeScript, TypeORM, PostgreSQL
+- **Testing**: Jest, Playwright
+- **Deployment**: Vercel (Frontend), Railway (Backend)
+- **Authentication**: NextAuth.js with Google OAuth
 
-Para ejecutar las pruebas end-to-end con Playwright asegúrate de tener los servicios corriendo (por ejemplo con `docker-compose up`) y luego ejecuta:
+## 📁 Project Structure
 
-```bash
-npm run test:e2e
+```
+RegexLab/
+├── frontend/          # Next.js frontend application
+├── backend/           # NestJS backend API
+├── e2e/              # End-to-end tests
+├── .github/          # GitHub Actions workflows
+├── setup.sh          # Setup script
+├── validate-env.sh   # Environment validation
+└── docker-compose.yml # Local development services
 ```
 
-Esto lanzará los escenarios de Playwright ubicados en la carpeta `e2e`.
+## 🔧 Development
 
-## Despliegues automáticos
+### Scripts
+- `./setup.sh` - Complete setup and validation
+- `./validate-env.sh` - Validate environment variables
+- `npm test` - Run all tests
+- `npm run test:e2e` - Run E2E tests
 
-Para automatizar los despliegues del backend con la CLI de Railway agrega las siguientes variables de entorno en tu sistema o proceso de CI:
+### Environment Variables
+See `.env.example` for required environment variables.
 
-- `RAILWAY_TOKEN`: token de acceso a Railway.
-- `RAILWAY_PROJECT_ID`: identificador de tu proyecto.
-- `RAILWAY_SERVICE_ID`: identificador del servicio a desplegar.
+## 🚀 Deployment
 
-Con ellas podrás ejecutar `railway up` sin intervención manual.
+The application uses GitHub Actions for CI/CD:
+- **Frontend**: Automatically deployed to Vercel
+- **Backend**: Automatically deployed to Railway
+- **Database**: PostgreSQL on Railway
+
+## 🧪 Testing
+
+- **Unit Tests**: Jest for frontend and backend
+- **E2E Tests**: Playwright for full application testing
+- **Coverage**: Automatic coverage reporting
+
+## 📚 Documentation
+
+- [Environment Setup](ENVIRONMENT_VARIABLES.md)
+- [Local Development](LOCAL_ENVIRONMENT.md)
+- [Testing Guide](README-TESTING.md)
+
+## 🚨 Common Issues & Solutions
+
+### Environment Variables
+- **Issue**: "NO_SECRET" errors in NextAuth
+- **Solution**: Ensure `NEXTAUTH_SECRET` is set in `.env.local`
+
+### Database Connection
+- **Issue**: "password authentication failed"
+- **Solution**: Check `DATABASE_URL` format and credentials
+
+### Playwright Tests
+- **Issue**: "Executable doesn't exist"
+- **Solution**: Run `npx playwright install` to install browsers
+
+### Dependencies
+- **Issue**: Missing dependencies
+- **Solution**: Run `./setup.sh` for complete setup
+
+## 🔒 Security
+
+- Environment files (`.env.local`) are ignored by git
+- Production secrets are stored in GitHub repository secrets
+- Database credentials are managed securely through Railway
 
