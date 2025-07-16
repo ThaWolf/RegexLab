@@ -1,10 +1,10 @@
 {
   "name": "regexlab-backend",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "scripts": {
     "start": "node dist/main",
-    "build": "nest build",
+    "build": "nest build && echo 'Build completed at $(date)' > dist/build-timestamp.txt",
     "start:dev": "nest start --watch",
     "test": "jest --coverage"
   },

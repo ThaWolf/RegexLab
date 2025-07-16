@@ -28,6 +28,16 @@ export class RegexController {
     return this.regexService.testRegex(pattern, text, flags)
   }
 
+  @Get('health')
+  async getHealth() {
+    return {
+      status: 'ok',
+      module: 'regex',
+      timestamp: new Date().toISOString(),
+      version: '1.0.0'
+    }
+  }
+
   @Get('patterns')
   async getCommonPatterns() {
     return {
