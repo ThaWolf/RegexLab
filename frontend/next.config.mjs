@@ -6,6 +6,7 @@ const nextConfig = {
     // app directory enabled by default
     // contentlayer: true,
   },
+  pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'mdx'],
 }
 
 const withMDX = nextMdx({
