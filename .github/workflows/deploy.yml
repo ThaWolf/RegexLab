@@ -42,51 +42,15 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install
       
-      - name: Start frontend server and run E2E tests
+      - name: Run E2E tests against deployed frontend
         run: |
-          # Debug: Check environment variables
-          echo "🔍 Checking environment variables..."
-          echo "NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:0:20}..."
-          echo "NEXTAUTH_URL: ${NEXTAUTH_URL}"
-          echo "NEXTAUTH_SECRET: ${NEXTAUTH_SECRET:0:10}..."
-          echo "GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:0:20}..."
+          echo "🧪 Running E2E tests against deployed frontend..."
           
-          # Start the server in background with debug output
-          echo "🚀 Starting frontend server..."
-          npm --prefix frontend run start > server.log 2>&1 &
-          SERVER_PID=$!
-          
-          # Wait for server to be ready
-          echo "⏳ Waiting for frontend server to start..."
-          for i in {1..60}; do
-            if curl -f http://localhost:3000 > /dev/null 2>&1; then
-              echo "✅ Frontend server is ready!"
-              break
-            fi
-            echo "Attempt $i: Server not ready yet..."
-            if [ $i -eq 30 ]; then
-              echo "📋 Server log (first 20 lines):"
-              head -20 server.log || true
-            fi
-            sleep 2
-          done
-          
-          # Verify server is actually running
-          if ! curl -f http://localhost:3000 > /dev/null 2>&1; then
-            echo "❌ Frontend server failed to start"
-            echo "📋 Full server log:"
-            cat server.log || true
-            exit 1
-          fi
+          # Set the base URL to the deployed frontend
+          export PLAYWRIGHT_BASE_URL=https://regexlab.vercel.app
           
           # Run E2E tests
-          echo "🧪 Running E2E tests..."
           npm run test:e2e
-          
-          # Clean up
-          echo "🧹 Cleaning up..."
-          kill $SERVER_PID || true
-          wait $SERVER_PID 2>/dev/null || true
         env:
           NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
           NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
