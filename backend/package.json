@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "nest start",
-    "start:dev": "nest start --watch",
+    "start": "node dist/main",
     "build": "nest build",
+    "start:dev": "nest start --watch",
     "test": "jest --coverage"
   },
   "dependencies": {

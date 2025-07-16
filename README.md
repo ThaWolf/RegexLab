@@ -12,6 +12,7 @@ Proyecto inicial para RegexLab con frontend en Next.js y backend en NestJS.
 ## Infraestructura
 - **Frontend** preparado para desplegar en Vercel (ver `vercel.json`).
 - **Backend** puede desplegarse en Railway (agregar variables y comandos según la plataforma).
+  - Al estar en la carpeta `backend/` configurá el **Root Directory** del servicio a `backend`.
 
 ## Tests
 
