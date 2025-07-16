@@ -6,3 +6,4 @@ backend/dist
 frontend/package-lock.json
 backend/coverage
 frontend/coverage
+.env.local
