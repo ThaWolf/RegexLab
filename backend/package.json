@@ -5,7 +5,8 @@
   "scripts": {
     "start": "node dist/main",
     "build": "nest build && echo 'Build completed at $(date)' > dist/build-timestamp.txt",
-    "start:dev": "nest start --watch",
+    "start:dev": "npx @nestjs/cli start --watch",
+    "start:local": "DATABASE_URL=postgresql://test:test@localhost:5432/test npx @nestjs/cli start --watch",
     "test": "jest --coverage"
   },
   "dependencies": {

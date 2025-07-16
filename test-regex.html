@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RegexLab API Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .test-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        .success { background-color: #d4edda; border-color: #c3e6cb; }
+        .error { background-color: #f8d7da; border-color: #f5c6cb; }
+        .loading { background-color: #fff3cd; border-color: #ffeaa7; }
+        
+        input, textarea, button {
+            margin: 5px;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        button:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+        }
+        .result {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            white-space: pre-wrap;
+            font-family: monospace;
+        }
+        .pattern-button {
+            margin: 2px;
+            padding: 5px 10px;
+            background-color: #e9ecef;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .pattern-button:hover {
+            background-color: #dee2e6;
+        }
+    </style>
+</head>
+<body>
+    <h1>RegexLab API Test</h1>
+    
+    <div class="container">
+        <h2>API Health Check</h2>
+        <button onclick="testHealth()">Test Health Endpoint</button>
+        <div id="health-result" class="result"></div>
+    </div>
+
+    <div class="container">
+        <h2>Common Patterns</h2>
+        <button onclick="loadPatterns()">Load Common Patterns</button>
+        <div id="patterns-result" class="result"></div>
+        <div id="pattern-buttons"></div>
+    </div>
+
+    <div class="container">
+        <h2>Regex Explanation</h2>
+        <input type="text" id="explain-pattern" placeholder="Enter regex pattern" value="^\d{3}-\d{2}-\d{4}$" style="width: 300px;">
+        <input type="text" id="explain-flags" placeholder="Flags (g, i, m, s, u, y)" value="" style="width: 100px;">
+        <button onclick="explainRegex()">Explain Pattern</button>
+        <div id="explain-result" class="result"></div>
+    </div>
+
+    <div class="container">
+        <h2>Regex Testing</h2>
+        <input type="text" id="test-pattern" placeholder="Enter regex pattern" value="^\d{3}-\d{2}-\d{4}$" style="width: 300px;">
+        <input type="text" id="test-flags" placeholder="Flags" value="gm" style="width: 100px;">
+        <br>
+        <textarea id="test-text" placeholder="Enter text to test" rows="4" style="width: 100%;">123-45-6789
+000-00-0000
+abc-def-ghij
+111-22-3333</textarea>
+        <br>
+        <button onclick="testRegex()">Test Regex</button>
+        <div id="test-result" class="result"></div>
+    </div>
+
+    <script>
+        const API_BASE = 'https://passionate-courage-production.up.railway.app/api';
+
+        async function makeRequest(endpoint, options = {}) {
+            try {
+                const response = await fetch(`${API_BASE}${endpoint}`, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...options.headers
+                    },
+                    ...options
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                return await response.json();
+            } catch (error) {
+                throw new Error(`Request failed: ${error.message}`);
+            }
+        }
+
+        function showResult(elementId, data, isSuccess = true) {
+            const element = document.getElementById(elementId);
+            element.className = `result ${isSuccess ? 'success' : 'error'}`;
+            element.textContent = JSON.stringify(data, null, 2);
+        }
+
+        async function testHealth() {
+            const button = event.target;
+            button.disabled = true;
+            button.textContent = 'Testing...';
+            
+            try {
+                const result = await makeRequest('/regex/health');
+                showResult('health-result', result, true);
+            } catch (error) {
+                showResult('health-result', { error: error.message }, false);
+            } finally {
+                button.disabled = false;
+                button.textContent = 'Test Health Endpoint';
+            }
+        }
+
+        async function loadPatterns() {
+            const button = event.target;
+            button.disabled = true;
+            button.textContent = 'Loading...';
+            
+            try {
+                const result = await makeRequest('/regex/patterns');
+                showResult('patterns-result', result, true);
+                
+                // Create pattern buttons
+                const buttonsContainer = document.getElementById('pattern-buttons');
+                buttonsContainer.innerHTML = '';
+                result.patterns.forEach(pattern => {
+                    const button = document.createElement('button');
+                    button.className = 'pattern-button';
+                    button.textContent = pattern.name;
+                    button.onclick = () => {
+                        document.getElementById('explain-pattern').value = pattern.pattern;
+                        document.getElementById('test-pattern').value = pattern.pattern;
+                    };
+                    buttonsContainer.appendChild(button);
+                });
+            } catch (error) {
+                showResult('patterns-result', { error: error.message }, false);
+            } finally {
+                button.disabled = false;
+                button.textContent = 'Load Common Patterns';
+            }
+        }
+
+        async function explainRegex() {
+            const button = event.target;
+            button.disabled = true;
+            button.textContent = 'Explaining...';
+            
+            try {
+                const pattern = document.getElementById('explain-pattern').value;
+                const flags = document.getElementById('explain-flags').value;
+                
+                const result = await makeRequest('/regex/explain', {
+                    method: 'POST',
+                    body: JSON.stringify({ pattern, flags })
+                });
+                
+                showResult('explain-result', result, true);
+            } catch (error) {
+                showResult('explain-result', { error: error.message }, false);
+            } finally {
+                button.disabled = false;
+                button.textContent = 'Explain Pattern';
+            }
+        }
+
+        async function testRegex() {
+            const button = event.target;
+            button.disabled = true;
+            button.textContent = 'Testing...';
+            
+            try {
+                const pattern = document.getElementById('test-pattern').value;
+                const flags = document.getElementById('test-flags').value;
+                const text = document.getElementById('test-text').value;
+                
+                const result = await makeRequest('/regex/test', {
+                    method: 'POST',
+                    body: JSON.stringify({ pattern, flags, text })
+                });
+                
+                showResult('test-result', result, true);
+            } catch (error) {
+                showResult('test-result', { error: error.message }, false);
+            } finally {
+                button.disabled = false;
+                button.textContent = 'Test Regex';
+            }
+        }
+
+        // Auto-load patterns on page load
+        window.onload = function() {
+            loadPatterns();
+        };
+    </script>
+</body>
+</html> 
