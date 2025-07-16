@@ -32,3 +32,14 @@ npm run test:e2e
 ```
 
 Esto lanzará los escenarios de Playwright ubicados en la carpeta `e2e`.
+
+## Despliegues automáticos
+
+Para automatizar los despliegues del backend con la CLI de Railway agrega las siguientes variables de entorno en tu sistema o proceso de CI:
+
+- `RAILWAY_TOKEN`: token de acceso a Railway.
+- `RAILWAY_PROJECT_ID`: identificador de tu proyecto.
+- `RAILWAY_SERVICE_ID`: identificador del servicio a desplegar.
+
+Con ellas podrás ejecutar `railway up` sin intervención manual.
+
