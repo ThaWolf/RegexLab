@@ -22,3 +22,13 @@ npm run test
 ```
 
 El comando ejecuta los tests de ambos proyectos con Jest y genera reportes de coverage en `backend/coverage` y `frontend/coverage`.
+
+### Tests E2E
+
+Para ejecutar las pruebas end-to-end con Playwright asegúrate de tener los servicios corriendo (por ejemplo con `docker-compose up`) y luego ejecuta:
+
+```bash
+npm run test:e2e
+```
+
+Esto lanzará los escenarios de Playwright ubicados en la carpeta `e2e`.
