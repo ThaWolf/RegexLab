@@ -13,11 +13,6 @@ export const authOptions: NextAuthOptions = {
     strategy: 'jwt',
   },
   secret: process.env.NEXTAUTH_SECRET,
-  pages: {
-    signIn: '/api/auth/signin',
-    signOut: '/api/auth/signout',
-    error: '/api/auth/error',
-  },
   callbacks: {
     session({ session, token }) {
       if (session.user) {
@@ -27,7 +22,7 @@ export const authOptions: NextAuthOptions = {
     },
   },
   // Add error handling for missing environment variables
-  debug: process.env.NODE_ENV === 'development',
+  debug: true, // Enable debug mode to see what's happening
 }
 
 export function getAuthSession() {
