@@ -43,7 +43,15 @@ export default function TrainPage() {
   }
 
   if (!exercise) {
-    return <p className="p-4">Loading...</p>
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="text-center space-y-4">
+          <div className="text-4xl">🌿</div>
+          <p className="text-garden-dark dark:text-earth-light">Loading training exercise...</p>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-sky mx-auto"></div>
+        </div>
+      </div>
+    )
   }
 
   return (

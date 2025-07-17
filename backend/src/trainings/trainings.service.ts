@@ -1,18 +1,25 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, OnModuleInit } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { TrainingExercise } from './training-exercise.entity'
 import { TrainingLevel } from './training-level.enum'
 import { TrainingResult } from './training-result.entity'
+import { SeedService } from './seed.service'
 
 @Injectable()
-export class TrainingsService {
+export class TrainingsService implements OnModuleInit {
   constructor(
     @InjectRepository(TrainingExercise)
     private readonly exerciseRepo: Repository<TrainingExercise>,
     @InjectRepository(TrainingResult)
     private readonly resultRepo: Repository<TrainingResult>,
+    private readonly seedService: SeedService,
   ) {}
+
+  async onModuleInit() {
+    // Seed training exercises when the module initializes
+    await this.seedService.seedTrainingExercises()
+  }
 
   async randomByLevel(level: TrainingLevel): Promise<TrainingExercise | null> {
     return this.exerciseRepo
