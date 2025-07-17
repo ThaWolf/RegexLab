@@ -13,6 +13,11 @@ export const authOptions: NextAuthOptions = {
     strategy: 'jwt',
   },
   secret: process.env.NEXTAUTH_SECRET,
+  pages: {
+    signIn: '/api/auth/signin',
+    signOut: '/api/auth/signout',
+    error: '/api/auth/error',
+  },
   callbacks: {
     session({ session, token }) {
       if (session.user) {
