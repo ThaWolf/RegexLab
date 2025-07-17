@@ -9,7 +9,7 @@ describe('Navbar', () => {
   it('shows sign in button when no session', () => {
     ;(useSession as jest.Mock).mockReturnValue({ data: null })
     render(<Navbar />)
-    expect(screen.getByText('Iniciar sesión')).toBeInTheDocument()
+    expect(screen.getByText('Sign in')).toBeInTheDocument()
   })
 
   it('shows sign out when session present', async () => {
@@ -18,7 +18,7 @@ describe('Navbar', () => {
     ;(useSession as jest.Mock).mockReturnValue({ data: { user: { name: 'Ana' } } })
     jest.spyOn(require('next-auth/react'), 'signOut').mockImplementation(signOut)
     render(<Navbar />)
-    await user.click(screen.getByText('Salir'))
+    await user.click(screen.getByText('Sign out'))
     expect(signOut).toHaveBeenCalled()
   })
 })

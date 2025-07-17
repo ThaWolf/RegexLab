@@ -7,8 +7,7 @@ on:
     branches: [main]
 
 env:
-  NODE_VERSION: '18'
-
+  NODE_VERSION: 18
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -49,37 +48,11 @@ jobs:
           # Set the base URL to the deployed frontend
           export PLAYWRIGHT_BASE_URL=https://regexlab.vercel.app
           
-          # Run E2E tests (continue on failure for now)
-          npm run test:e2e || echo "⚠️ E2E tests failed, but continuing deployment"
-        continue-on-error: true
+          # Run E2tests (continue on failure for now)
+          npm run test:e2echo "⚠️ E2E tests failed, but continuing deployment       continue-on-error: true
         env:
           NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
           NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
           NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
           GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
-          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
-
-  deploy-backend:
-    needs: test
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-    steps:
-      - uses: actions/checkout@v4
-      
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-      
-      - name: Install dependencies
-        run: |
-          npm --prefix backend ci
-      
-      - name: Build backend
-        run: npm --prefix backend run build
-      
-      - name: Deploy to Railway
-        run: |
-          npm install -g @railway/cli
-          railway up ./backend --service ${{ secrets.RAILWAY_SERVICE_ID }} -- --token ${{ secrets.RAILWAY_TOKEN }} 
+          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }} 

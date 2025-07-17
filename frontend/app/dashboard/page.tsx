@@ -31,13 +31,13 @@ export default async function DashboardPage() {
   return (
     <main className="p-4">
       <h1 className="text-2xl font-bold">Dashboard</h1>
-      <p className="mt-2">Bienvenido, {session.user?.name}</p>
-      <p className="mt-2">Estado del backend: {health}</p>
+      <p className="mt-2">Welcome, {session.user?.name}</p>
+      <p className="mt-2">Backend status: {health}</p>
       {stats && (
         <div className="mt-4 space-y-1">
-          <p>Ejercicios completados: {stats.totalCompleted}</p>
-          <p>Tasa de aciertos: {(stats.successRate * 100).toFixed(0)}%</p>
-          <p className="font-semibold">Aciertos por nivel:</p>
+          <p>Exercises completed: {stats.totalCompleted}</p>
+          <p>Success rate: {(stats.successRate * 100).toFixed(0)}%</p>
+          <p className="font-semibold">Correct answers by level:</p>
           <ul className="list-disc list-inside">
             {Object.entries(stats.correctByLevel).map(([lvl, count]) => (
               <li key={lvl}>

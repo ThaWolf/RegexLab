@@ -1,18 +1,18 @@
 import { test, expect } from '@playwright/test'
 
-test('usuario visita la página principal', async ({ page }) => {
+test('user visits the main page', async ({ page }) => {
   await page.goto('/')
   await expect(page).toHaveURL(/\/$/)
   await expect(page.getByRole('heading', { name: 'RegexLab' })).toBeVisible()
 })
 
-test('usuario accede a la documentación', async ({ page }) => {
+test('user accesses the documentation', async ({ page }) => {
   await page.goto('/docs')
   await expect(page).toHaveURL(/\/docs$/)
-  await expect(page.getByText(/Documentación/i)).toBeVisible()
+  await expect(page.getByText(/Documentation/i)).toBeVisible()
 })
 
-test('usuario accede al dashboard', async ({ page }) => {
+test('user accesses the dashboard', async ({ page }) => {
   await page.goto('/dashboard')
   await expect(page).toHaveURL(/\/dashboard$/)
   // Check for any content that indicates we're on the dashboard page

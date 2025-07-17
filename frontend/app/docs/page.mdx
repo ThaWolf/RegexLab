@@ -1,30 +1,28 @@
 import RegexTester from '../../components/RegexTester'
 
-# Documentación de Expresiones Regulares
+# Regular Expression Documentation
 
-## ¿Qué es una expresión regular?
+## What is a regular expression?
 
-Una expresión regular es un patrón que permite buscar y manipular texto de
-forma flexible. Se utilizan para validar datos o encontrar coincidencias dentro
-de cadenas.
+A regular expression is a pattern that allows you to search and manipulate text flexibly. They are used to validate data or find matches within strings.
 
-## Símbolos básicos
+## Basic symbols
 
-- `.` cualquier carácter
-- `*` cero o más repeticiones
-- `+` una o más repeticiones
-- `?` opcional
-- `[abc]` conjunto de caracteres
-- `\\d` dígito
-- `\\w` carácter alfanumérico
-- `( )` agrupar
+- `.` any character
+- `*` zero or more repetitions
+- `+` one or more repetitions
+- `?` optional
+- `[abc]` character set
+- `\d` digit
+- `\w` alphanumeric character
+- `( )` group
 
-## Ejemplos
+## Examples
 
-- Validar un email sencillo: `/^[\w.-]+@[\w.-]+\.[A-Za-z]{2,}$/`
-- Extraer numeros: `/\d+/g`
-- Comprobar fecha formato `dd/mm/yyyy`: `/^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/`
+- Validate a simple email: `/^[\w.-]+@[\w.-]+\.[A-Za-z]{2,}$/`
+- Extract numbers: `/\d+/g`
+- Check date format `dd/mm/yyyy`: `/^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/`
 
-## Prueba rápida
+## Quick test
 
 <RegexTester initialPattern={"\\d+"} initialText={"123"} />

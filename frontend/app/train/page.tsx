@@ -39,24 +39,24 @@ export default function TrainPage() {
       }),
     })
     const data = await res.json()
-    setResult(data.valid ? '¡Correcto!' : 'Incorrecto')
+    setResult(data.valid ? 'Correct!' : 'Incorrect')
   }
 
   if (!exercise) {
-    return <p className="p-4">Cargando...</p>
+    return <p className="p-4">Loading...</p>
   }
 
   return (
     <main className="p-4 space-y-4">
-      <h1 className="text-2xl font-bold">Entrenamiento</h1>
+      <h1 className="text-2xl font-bold">Training</h1>
       <select
         className="border p-1 rounded"
         value={level}
         onChange={(e) => setLevel(e.target.value as any)}
       >
-        <option value="basic">Básico</option>
-        <option value="intermediate">Intermedio</option>
-        <option value="advanced">Avanzado</option>
+        <option value="basic">Basic</option>
+        <option value="intermediate">Intermediate</option>
+        <option value="advanced">Advanced</option>
       </select>
       <p>{exercise.description}</p>
       <div className="p-2 bg-gray-100 rounded font-mono">
@@ -67,7 +67,7 @@ export default function TrainPage() {
         onClick={handleValidate}
         className="px-4 py-2 bg-blue-500 text-white rounded"
       >
-        Validar
+        Validate
       </button>
       {result && <div className="font-bold">{result}</div>}
     </main>

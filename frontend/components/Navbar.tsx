@@ -13,7 +13,7 @@ export default function Navbar() {
       </div>
       <div className="flex items-center gap-4">
         <Link href="/train" className="underline">
-          Entrenar
+          Train
         </Link>
         <Link href="/docs" className="underline">
           Docs
@@ -31,12 +31,12 @@ export default function Navbar() {
             )}
             <span>{session.user?.name}</span>
             <button onClick={() => signOut()} className="ml-2 underline">
-              Salir
+              Sign out
             </button>
           </div>
         ) : (
           <button onClick={() => signIn('google')} className="underline">
-            Iniciar sesión
+            Sign in
           </button>
         )}
       </div>
