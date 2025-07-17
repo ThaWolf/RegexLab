@@ -49,10 +49,16 @@ export default function EnhancedRegexTester() {
   const fetchCommonPatterns = async () => {
     try {
       const response = await fetch(`${apiBase}/regex/patterns`)
+      if (!response.ok) {
+        console.warn('Failed to fetch common patterns, using empty array')
+        setCommonPatterns([])
+        return
+      }
       const data = await response.json()
-      setCommonPatterns(data.patterns)
+      setCommonPatterns(data.patterns || [])
     } catch (error) {
       console.error('Failed to fetch common patterns:', error)
+      setCommonPatterns([])
     }
   }
 
@@ -140,16 +146,20 @@ export default function EnhancedRegexTester() {
         <div>
           <h3 className="text-sm font-medium mb-2">Common Patterns</h3>
           <div className="flex flex-wrap gap-2">
-            {commonPatterns.map((patternData) => (
-              <button
-                key={patternData.name}
-                onClick={() => selectPattern(patternData)}
-                className="px-3 py-1 text-xs bg-blue-100 text-blue-800 rounded hover:bg-blue-200 transition-colors"
-                title={patternData.description}
-              >
-                {patternData.name}
-              </button>
-            ))}
+            {Array.isArray(commonPatterns) && commonPatterns.length > 0 ? (
+              commonPatterns.map((patternData) => (
+                <button
+                  key={patternData.name}
+                  onClick={() => selectPattern(patternData)}
+                  className="px-3 py-1 text-xs bg-blue-100 text-blue-800 rounded hover:bg-blue-200 transition-colors"
+                  title={patternData.description}
+                >
+                  {patternData.name}
+                </button>
+              ))
+            ) : (
+              <p className="text-sm text-gray-500">No common patterns available</p>
+            )}
           </div>
         </div>
 
