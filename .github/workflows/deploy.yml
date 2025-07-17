@@ -117,4 +117,4 @@ jobs:
       - name: Deploy to Railway
         run: |
           npm install -g @railway/cli
-          railway up --service ${{ secrets.RAILWAY_SERVICE_ID }} --directory ./backend -- --token ${{ secrets.RAILWAY_TOKEN }} 
+          railway up ./backend --service ${{ secrets.RAILWAY_SERVICE_ID }} -- --token ${{ secrets.RAILWAY_TOKEN }} 
