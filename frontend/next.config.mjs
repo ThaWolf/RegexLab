@@ -1,4 +1,4 @@
-import nextMdx from '@next/mdx'
+import nextMdx from '@next/mdx';
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -7,10 +7,13 @@ const nextConfig = {
     // contentlayer: true,
   },
   pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'mdx'],
-}
+};
 
 const withMDX = nextMdx({
-  extension: /\.mdx$/,
-})
+  extension: /\.mdx?$/,
+  options: {
+    // Any MDX options go here
+  },
+});
 
-export default withMDX(nextConfig)
+export default withMDX(nextConfig);
