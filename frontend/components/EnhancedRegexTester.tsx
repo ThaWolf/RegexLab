@@ -138,67 +138,67 @@ export default function EnhancedRegexTester() {
   }
 
   return (
-    <div className="space-y-6 p-6 border rounded-lg bg-white shadow-sm">
+    <div className="space-y-6 p-8 border rounded-2xl bg-garden-light dark:bg-garden-dark shadow-soft transition-colors">
       <div className="space-y-4">
-        <h2 className="text-xl font-bold">Enhanced Regex Tester</h2>
+        <h2 className="text-2xl font-bold text-garden-dark dark:text-earth-light mb-2">Regex Playground</h2>
         
         {/* Common Patterns */}
         <div>
-          <h3 className="text-sm font-medium mb-2">Common Patterns</h3>
+          <h3 className="text-sm font-medium mb-2 text-garden-dark dark:text-earth-light">Common Patterns</h3>
           <div className="flex flex-wrap gap-2">
             {Array.isArray(commonPatterns) && commonPatterns.length > 0 ? (
               commonPatterns.map((patternData) => (
                 <button
                   key={patternData.name}
                   onClick={() => selectPattern(patternData)}
-                  className="px-3 py-1 text-xs bg-blue-100 text-blue-800 rounded hover:bg-blue-200 transition-colors"
+                  className="px-3 py-1 text-xs bg-sky-light dark:bg-sky-dark text-sky-dark dark:text-sky-light rounded hover:bg-sky transition-colors"
                   title={patternData.description}
                 >
                   {patternData.name}
                 </button>
               ))
             ) : (
-              <p className="text-sm text-gray-500">No common patterns available</p>
+              <p className="text-sm text-earth-dark dark:text-earth-light">No common patterns available</p>
             )}
           </div>
         </div>
 
         {/* Regex Input */}
         <div className="space-y-2">
-          <label className="text-sm font-medium">Regex Pattern</label>
+          <label className="text-sm font-medium text-garden-dark dark:text-earth-light">Regex Pattern</label>
           <div className="flex gap-2">
             <Input
               value={pattern}
               onChange={(e) => setPattern(e.target.value)}
               placeholder="Enter regex pattern..."
-              className="font-mono"
+              className="font-mono bg-earth-light dark:bg-garden-dark border border-garden dark:border-earth-light focus:ring-2 focus:ring-sky transition-colors"
             />
             <Input
               value={flags}
               onChange={(e) => setFlags(e.target.value)}
               placeholder="Flags (g, i, m, s, u, y)"
-              className="w-32"
+              className="w-32 bg-earth-light dark:bg-garden-dark border border-garden dark:border-earth-light focus:ring-2 focus:ring-sky transition-colors"
             />
           </div>
         </div>
 
         {/* Test Text */}
         <div className="space-y-2">
-          <label className="text-sm font-medium">Test Text</label>
+          <label className="text-sm font-medium text-garden-dark dark:text-earth-light">Test Text</label>
           <textarea
             value={text}
             onChange={(e) => setText(e.target.value)}
             placeholder="Enter text to test against..."
-            className="w-full p-3 border rounded-md resize-none h-24"
+            className="w-full p-3 border rounded-md resize-none h-24 bg-earth-light dark:bg-garden-dark border-garden dark:border-earth-light text-garden-dark dark:text-earth-light focus:ring-2 focus:ring-sky transition-colors"
           />
         </div>
 
         {/* Action Buttons */}
         <div className="flex gap-2">
-          <Button onClick={explainRegex} disabled={loading || !pattern.trim()}>
+          <Button onClick={explainRegex} disabled={loading || !pattern.trim()} className="bg-sky hover:bg-sky-dark text-white font-semibold px-6 py-2 rounded-lg transition-colors">
             {loading ? 'Explaining...' : 'Explain Pattern'}
           </Button>
-          <Button onClick={testRegex} disabled={loading || !pattern.trim() || !text.trim()}>
+          <Button onClick={testRegex} disabled={loading || !pattern.trim() || !text.trim()} className="bg-garden hover:bg-garden-dark text-white font-semibold px-6 py-2 rounded-lg transition-colors">
             {loading ? 'Testing...' : 'Test Regex'}
           </Button>
         </div>
@@ -212,18 +212,18 @@ export default function EnhancedRegexTester() {
 
         {/* Explanation */}
         {explanation && (
-          <div className="space-y-3 p-4 bg-blue-50 rounded-md">
-            <h3 className="font-medium">Pattern Explanation</h3>
-            <p className="text-sm text-gray-700">{explanation.description}</p>
+          <div className="space-y-3 p-4 bg-sky-light dark:bg-sky-dark rounded-md">
+            <h3 className="font-medium text-garden-dark dark:text-earth-light">Pattern Explanation</h3>
+            <p className="text-sm text-garden-dark dark:text-earth-light">{explanation.description}</p>
             
             {explanation.components.length > 0 && (
               <div>
-                <h4 className="text-sm font-medium mb-2">Components:</h4>
+                <h4 className="text-sm font-medium mb-2 text-garden-dark dark:text-earth-light">Components:</h4>
                 <div className="space-y-1">
                   {explanation.components.map((component, index) => (
-                    <div key={index} className="text-xs bg-white p-2 rounded border">
-                      <span className="font-mono text-blue-600">{component.value}</span>
-                      <span className="text-gray-600 ml-2">- {component.description}</span>
+                    <div key={index} className="text-xs bg-earth-light dark:bg-garden-dark p-2 rounded border border-garden dark:border-earth-light">
+                      <span className="font-mono text-sky-dark dark:text-sky-light">{component.value}</span>
+                      <span className="text-garden-dark dark:text-earth-light ml-2">- {component.description}</span>
                     </div>
                   ))}
                 </div>
@@ -245,8 +245,8 @@ export default function EnhancedRegexTester() {
 
         {/* Test Results */}
         {testResult && (
-          <div className="space-y-3 p-4 bg-green-50 rounded-md">
-            <h3 className="font-medium">Test Results</h3>
+          <div className="space-y-3 p-4 bg-garden-light dark:bg-garden-dark rounded-md border border-garden dark:border-earth-light">
+            <h3 className="font-medium text-garden-dark dark:text-earth-light">Test Results</h3>
             
             <div className="text-sm">
               <p className="mb-2">
