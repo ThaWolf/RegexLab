@@ -99,7 +99,7 @@ export default function EnhancedRegexTester() {
   const [selectedFlavor, setSelectedFlavor] = useState<string>('javascript')
   const [showFlavorInfo, setShowFlavorInfo] = useState(false)
 
-  const apiBase = process.env.NEXT_PUBLIC_API_URL || 'https://passionate-courage-production.up.railway.app/api'
+  const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api'
 
   useEffect(() => {
     fetchCommonPatterns()
@@ -298,14 +298,36 @@ export default function EnhancedRegexTester() {
         body: JSON.stringify({ pattern, flags })
       })
 
-      if (!response.ok) {
-        throw new Error('Failed to explain regex')
+      if (response.ok) {
+        const data = await response.json()
+        setExplanation(data)
+        setLoading(false)
+        setExplaining(false)
+        return
       }
-
-      const data = await response.json()
-      setExplanation(data)
     } catch (error) {
-      setError(error instanceof Error ? error.message : 'Failed to explain regex')
+      // Continue to fallback
+    }
+
+    // Fallback to basic explanation
+    try {
+      const regex = new RegExp(pattern, flags)
+      setExplanation({
+        pattern,
+        description: 'Basic regex pattern explanation (demo mode)',
+        components: [
+          {
+            type: 'pattern',
+            value: pattern,
+            description: 'The regex pattern you entered',
+            position: { start: 0, end: pattern.length }
+          }
+        ],
+        examples: [],
+        warnings: ['Using demo mode - backend not available']
+      })
+    } catch (regexError) {
+      setError('Invalid regex pattern')
     } finally {
       setLoading(false)
       setExplaining(false)
@@ -325,14 +347,31 @@ export default function EnhancedRegexTester() {
         body: JSON.stringify({ pattern, text, flags })
       })
 
-      if (!response.ok) {
-        throw new Error('Failed to test regex')
+      if (response.ok) {
+        const data = await response.json()
+        setTestResult(data)
+        return
       }
-
-      const data = await response.json()
-      setTestResult(data)
     } catch (error) {
-      setError(error instanceof Error ? error.message : 'Failed to test regex')
+      // Continue to fallback
+    }
+
+    // Fallback to client-side regex testing
+    try {
+      const regex = new RegExp(pattern, flags)
+      const matches = text.match(regex)
+      
+      setTestResult({
+        hasMatches: matches !== null && matches.length > 0,
+        matches: matches || [],
+        groups: [],
+        positions: matches ? matches.map(match => {
+          const index = text.indexOf(match)
+          return { start: index, end: index + match.length }
+        }) : []
+      })
+    } catch (regexError) {
+      setError('Invalid regex pattern')
     } finally {
       setLoading(false)
     }

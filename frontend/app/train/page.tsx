@@ -95,7 +95,7 @@ export default function TrainPage() {
   const [showDetailedStats, setShowDetailedStats] = useState(false)
   const { data: session } = useSession()
 
-  const apiBase = process.env.NEXT_PUBLIC_API_URL || 'https://passionate-courage-production.up.railway.app/api'
+  const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api'
 
   useEffect(() => {
     fetchExercise()
@@ -132,7 +132,52 @@ export default function TrainPage() {
       setShowHint(false)
       setShowSolution(false)
     } catch (error) {
-      setError('Failed to load exercise. Please try again.')
+      // Fallback to demo exercises when backend is not available
+      const demoExercises = {
+        basic: [
+          {
+            id: 1,
+            inputString: 'Hello world',
+            description: 'Match the word "Hello"',
+            expectedRegex: 'Hello',
+            level: 'basic'
+          },
+          {
+            id: 2,
+            inputString: 'The quick brown fox',
+            description: 'Match the word "fox"',
+            expectedRegex: 'fox',
+            level: 'basic'
+          }
+        ],
+        intermediate: [
+          {
+            id: 3,
+            inputString: 'Email: user@example.com',
+            description: 'Match an email address',
+            expectedRegex: '[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}',
+            level: 'intermediate'
+          }
+        ],
+        advanced: [
+          {
+            id: 4,
+            inputString: 'Phone: +1-555-123-4567',
+            description: 'Match a phone number with country code',
+            expectedRegex: '\\+?[1-9]\\d{1,14}',
+            level: 'advanced'
+          }
+        ]
+      }
+      
+      const exercises = demoExercises[level as keyof typeof demoExercises] || demoExercises.basic
+      const randomExercise = exercises[Math.floor(Math.random() * exercises.length)] as Exercise
+      setExercise(randomExercise)
+      setRegex('')
+      setResult(null)
+      setShowHint(false)
+      setShowSolution(false)
+      setError('Using demo mode - backend not available')
     } finally {
       setLoading(false)
     }
@@ -167,31 +212,61 @@ export default function TrainPage() {
   }
 
   const handleValidate = async () => {
-    if (!exercise || !session?.user?.id) return
+    if (!exercise) return
     
     setLoading(true)
     setError(null)
     
     try {
-      const response = await fetch(`${apiBase}/trainings/validate`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          userId: session.user.id,
-          id: exercise.id,
-          regex,
-        }),
-      })
+      // If we have a session, try to validate with backend
+      if (session?.user?.id) {
+        const response = await fetch(`${apiBase}/trainings/validate`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            userId: session.user.id,
+            id: exercise.id,
+            regex,
+          }),
+        })
+        
+        if (response.ok) {
+          const data = await response.json()
+          setResult(data)
+          
+          if (data.valid) {
+            // Fetch updated progress after successful completion
+            fetchProgress()
+            fetchDetailedStats()
+          }
+          return
+        }
+      }
       
-      if (!response.ok) throw new Error('Failed to validate')
-      
-      const data = await response.json()
-      setResult(data)
-      
-      if (data.valid) {
-        // Fetch updated progress after successful completion
-        fetchProgress()
-        fetchDetailedStats()
+      // Fallback validation for demo mode
+      try {
+        const userRegex = new RegExp(regex, 'g')
+        const matches = exercise.inputString.match(userRegex) || []
+        const expectedRegex = new RegExp(exercise.expectedRegex, 'g')
+        const expectedMatches = exercise.inputString.match(expectedRegex) || []
+        
+        const isValid = matches.length > 0 && matches.length === expectedMatches.length &&
+          matches.every((match, index) => match === expectedMatches[index])
+        
+        setResult({
+          valid: isValid,
+          matches: matches,
+          explanation: isValid 
+            ? 'Great job! Your regex pattern correctly matches the required elements.'
+            : 'Your regex pattern doesn\'t match the expected result. Try again!',
+          hint: isValid ? undefined : getHint()
+        })
+      } catch (regexError) {
+        setResult({
+          valid: false,
+          explanation: 'Invalid regex pattern. Please check your syntax.',
+          hint: 'Make sure your regex pattern is valid. Common issues include unescaped special characters.'
+        })
       }
     } catch (error) {
       setError('Failed to validate solution. Please try again.')
