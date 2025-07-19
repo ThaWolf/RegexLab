@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn } from 'typeorm'
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne, JoinColumn } from 'typeorm'
+import { TrainingExercise } from './training-exercise.entity'
 
 @Entity()
 export class TrainingResult {
@@ -19,4 +20,8 @@ export class TrainingResult {
 
   @CreateDateColumn()
   timestamp: Date
+
+  @ManyToOne(() => TrainingExercise)
+  @JoinColumn({ name: 'exerciseId' })
+  exercise: TrainingExercise
 }

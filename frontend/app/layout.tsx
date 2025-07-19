@@ -6,12 +6,12 @@ import ErrorBoundary from '../components/ErrorBoundary'
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
-      <body className="min-h-screen bg-earth-light text-garden-dark dark:bg-garden-dark dark:text-earth-light transition-colors">
+    <html lang="en" className="scroll-smooth">
+      <body className="min-h-screen bg-background-light text-text-primary-light dark:bg-background-dark dark:text-text-primary-dark transition-colors duration-300 antialiased">
         <Providers>
           <ErrorBoundary>
             <Navbar />
-            <main className="max-w-5xl mx-auto px-4 py-8">
+            <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fade-in">
               {children}
             </main>
           </ErrorBoundary>

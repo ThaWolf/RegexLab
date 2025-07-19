@@ -1,31 +1,51 @@
-import { Controller, Post, Get, Body, Query } from '@nestjs/common'
+import { Controller, Post, Get, Body, Query, HttpException, HttpStatus } from '@nestjs/common'
 import { RegexService, RegexGenerationRequest } from './regex.service'
+import { ExplainRegexDto, TestRegexDto, GenerateRegexDto } from './dto/regex.dto'
 
 @Controller('regex')
 export class RegexController {
   constructor(private readonly regexService: RegexService) {}
 
   @Post('explain')
-  async explainRegex(
-    @Body('pattern') pattern: string,
-    @Body('flags') flags: string = ''
-  ) {
-    return this.regexService.explainRegex(pattern, flags)
+  async explainRegex(@Body() dto: ExplainRegexDto) {
+    try {
+      return await this.regexService.explainRegex(dto.pattern, dto.flags || '')
+    } catch (error) {
+      throw new HttpException(
+        error.message || 'Failed to explain regex pattern',
+        HttpStatus.BAD_REQUEST
+      )
+    }
   }
 
   @Post('generate')
-  async generateRegex(@Body() request: RegexGenerationRequest) {
-    const pattern = await this.regexService.generateRegex(request)
-    return { pattern }
+  async generateRegex(@Body() dto: GenerateRegexDto) {
+    try {
+      const request: RegexGenerationRequest = {
+        description: dto.description,
+        examples: dto.examples ? dto.examples.split(',').map(e => e.trim()) : undefined,
+        flags: dto.flags
+      }
+      const pattern = await this.regexService.generateRegex(request)
+      return { pattern }
+    } catch (error) {
+      throw new HttpException(
+        error.message || 'Failed to generate regex pattern',
+        HttpStatus.BAD_REQUEST
+      )
+    }
   }
 
   @Post('test')
-  async testRegex(
-    @Body('pattern') pattern: string,
-    @Body('text') text: string,
-    @Body('flags') flags: string = ''
-  ) {
-    return this.regexService.testRegex(pattern, text, flags)
+  async testRegex(@Body() dto: TestRegexDto) {
+    try {
+      return await this.regexService.testRegex(dto.pattern, dto.text, dto.flags || '')
+    } catch (error) {
+      throw new HttpException(
+        error.message || 'Failed to test regex pattern',
+        HttpStatus.BAD_REQUEST
+      )
+    }
   }
 
   @Get('health')

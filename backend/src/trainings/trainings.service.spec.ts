@@ -4,6 +4,7 @@ import { Repository } from 'typeorm'
 import { TrainingsService } from './trainings.service'
 import { TrainingExercise } from './training-exercise.entity'
 import { TrainingResult } from './training-result.entity'
+import { SeedService } from './seed.service'
 
 describe('TrainingsService', () => {
   let service: TrainingsService
@@ -22,6 +23,10 @@ describe('TrainingsService', () => {
           provide: getRepositoryToken(TrainingResult),
           useValue: { save: jest.fn() },
         },
+        {
+          provide: SeedService,
+          useValue: { seedTrainingExercises: jest.fn() },
+        },
       ],
     }).compile()
 
@@ -33,7 +38,8 @@ describe('TrainingsService', () => {
   it('returns false if exercise not found', async () => {
     jest.spyOn(exerciseRepo, 'findOneBy').mockResolvedValue(null)
     const res = await service.validateRegex(1, 1, 'abc')
-    expect(res).toBe(false)
+    expect(res.valid).toBe(false)
+    expect(res.explanation).toBe('Exercise not found')
     expect(resultRepo.save).not.toHaveBeenCalled()
   })
 
@@ -41,11 +47,13 @@ describe('TrainingsService', () => {
     jest.spyOn(exerciseRepo, 'findOneBy').mockResolvedValue({
       id: 1,
       expectedRegex: 'abc',
+      inputString: 'abc def',
     } as any)
     jest.spyOn(resultRepo, 'save').mockResolvedValue({} as any)
 
     const res = await service.validateRegex(1, 1, 'abc')
-    expect(res).toBe(true)
+    expect(res.valid).toBe(true)
+    expect(res.explanation).toContain('Great job')
     expect(resultRepo.save).toHaveBeenCalledWith({
       userId: 1,
       exerciseId: 1,
